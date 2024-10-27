@@ -6,6 +6,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.serogr.apiservlet.webapp.cookies.services.LoginService;
+import org.serogr.apiservlet.webapp.cookies.services.LoginServiceImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,14 +26,16 @@ public class LoginServlet extends HttpServlet {
          * 1- Leer la Cookie (Obtenerla) en cada request se envía la cookie al servidor y se tiene que leer
          *
          *
-         * 2-Primero validamos que la cookie no venga vacía para que no de un null pointer exception*/
-        Cookie[] cookies = req.getCookies() != null ? req.getCookies() : new Cookie[0];
+         * 2-Primero validamos que la cookie no venga vacía para que no de un null pointer exception
+         *Cookie[] cookies = req.getCookies() != null ? req.getCookies() : new Cookie[0];
         // 3- Obtener la Cookie
         Optional<String> cookieOptional = Arrays.stream(cookies)
                 .filter(cookie -> "username".equals(cookie.getName()))
                 .map(Cookie::getValue)
-                .findAny();
+                .findAny();*/
         // 4- Si la cookie tiene contenido, se carga un anuncio de bienvenida.
+        LoginService auth = new LoginServiceImpl();
+        Optional<String> cookieOptional = auth.getUsername(req);
         if (cookieOptional.isPresent()) {
             resp.setContentType("text/html;charset=UTF8");
             try (PrintWriter out = resp.getWriter()) {
@@ -43,6 +47,7 @@ public class LoginServlet extends HttpServlet {
                 out.println("   </head>");
                 out.println("   <body>");
                 out.println("       <h1>Hola " + cookieOptional.get() + "</h1>");
+                out.println("        <p><a href='" + req.getContextPath() + "/index.html'> Volver </a></p>");
                 out.println("   </body>");
                 out.println("</html>");
             }
@@ -72,6 +77,7 @@ public class LoginServlet extends HttpServlet {
                 out.println("   <body>");
                 out.println("       <h1>Login correcto!</h1>");
                 out.println("       <h3>Hola " + username + "!</h3>");
+                out.println("        <p><a href='" + req.getContextPath() + "/index.html'> Volver </a></p>");
                 out.println("   </body>");
                 out.println("</html>");
             }
