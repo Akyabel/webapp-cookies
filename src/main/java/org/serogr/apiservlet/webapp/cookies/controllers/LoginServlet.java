@@ -66,22 +66,7 @@ public class LoginServlet extends HttpServlet {
 
             Cookie usernameCookie = new Cookie("username", username);
             resp.addCookie(usernameCookie);
-            resp.setContentType("text/html;charset=UTF8");
-            try (PrintWriter out = resp.getWriter()) {
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("   <head>");
-                out.println("       <meta charset=\"UTF-8\">");
-                out.println("           <title>Login</title>");
-                out.println("   </head>");
-                out.println("   <body>");
-                out.println("       <h1>Login correcto!</h1>");
-                out.println("       <h3>Hola " + username + "!</h3>");
-                out.println("        <p><a href='" + req.getContextPath() + "/index.html'> Volver </a></p>");
-                out.println("   </body>");
-                out.println("</html>");
-            }
-
+            resp.sendRedirect(req.getContextPath() + "/login.html");
         } else {
             //sendError permite enviar un mensaje de error personalizado
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Lo sentimos, no está autorizado para ingresar a esta página!");
